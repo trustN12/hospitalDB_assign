@@ -1,0 +1,340 @@
+@model IEnumerable<HospitalDb.Models.Patient>
+
+@{
+    ViewData["Title"] = "Patient Management";
+}
+
+<style>
+
+.dashboard-card{
+border-radius:18px;
+overflow:hidden;
+}
+
+.dashboard-header{
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
+color:white;
+padding:20px;
+}
+
+.search-box{
+position:relative;
+}
+
+.search-box input{
+padding-left:42px;
+height:42px;
+border-radius:12px;
+}
+
+.search-box i{
+position:absolute;
+left:14px;
+top:50%;
+transform:translateY(-50%);
+color:#888;
+}
+
+.stats-card{
+border-radius:14px;
+transition:.2s;
+}
+
+.stats-card:hover{
+transform:translateY(-4px);
+box-shadow:0 6px 20px rgba(0,0,0,.12);
+}
+
+.table tbody tr:hover{
+background:#f7f9ff;
+cursor:pointer;
+}
+
+.action-btn{
+border-radius:8px;
+margin-right:5px;
+}
+
+</style>
+
+<div class="container mt-5">
+
+<div class="card shadow-lg dashboard-card">
+
+<!-- HEADER -->
+<div class="dashboard-header d-flex justify-content-between align-items-center">
+
+<h3 class="mb-0 fw-bold">
+🏥 Patient Management
+</h3>
+
+<a asp-action="Create" class="btn btn-light fw-semibold shadow-sm">
+➕ Add Patient
+</a>
+
+</div>
+
+<div class="card-body">
+
+<!-- STATISTICS CARDS -->
+<div class="row mb-4">
+
+<div class="col-md-4">
+<div class="card stats-card shadow-sm border-0 text-center p-3">
+<h6>Total Patients</h6>
+<h2 class="text-primary">@ViewBag.TotalPatients</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card stats-card shadow-sm border-0 text-center p-3">
+<h6>Male Patients</h6>
+<h2 class="text-info">@Model.Count(x => x.Gender=="Male")</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card stats-card shadow-sm border-0 text-center p-3">
+<h6>Female Patients</h6>
+<h2 class="text-danger">@Model.Count(x => x.Gender=="Female")</h2>
+</div>
+</div>
+
+</div>
+
+<!-- SEARCH + FILTER -->
+<form method="get" asp-action="Index">
+
+<div class="row mb-4 align-items-center">
+
+<div class="col-md-5">
+
+<div class="search-box">
+
+<i class="bi bi-search"></i>
+
+<input id="searchInput"
+       type="text"
+       name="searchText"
+       value="@ViewBag.SearchText"
+       class="form-control shadow-sm"
+       placeholder="Search patient, doctor, gender, specialisation">
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<select name="doctorId" class="form-control">
+
+<option value="">All Doctors</option>
+
+@foreach(var doc in ViewBag.Doctors)
+{
+<option value="@doc.Did">@doc.Name</option>
+}
+
+</select>
+
+</div>
+
+<div class="col-md-2">
+
+<button class="btn btn-primary w-100">
+Search
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+<!-- EMPTY DATABASE -->
+@if (!Model.Any() && string.IsNullOrEmpty(ViewBag.SearchText))
+{
+
+<div class="text-center p-5">
+
+<h4>No Patients Found</h4>
+
+<p class="text-muted">Start by adding your first patient</p>
+
+<a asp-action="Create" class="btn btn-primary">
+Add First Patient
+</a>
+
+</div>
+
+}
+
+<!-- EMPTY SEARCH -->
+@if (!Model.Any() && !string.IsNullOrEmpty(ViewBag.SearchText))
+{
+
+<div class="text-center p-5">
+
+<h4>No Results Found</h4>
+
+<p class="text-muted">Try a different search</p>
+
+</div>
+
+}
+
+<!-- TABLE -->
+@if(Model.Any())
+{
+
+<div class="table-responsive">
+
+<table class="table align-middle" id="patientTable">
+
+<thead class="table-light">
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Gender</th>
+<th>Doctor</th>
+<th>Specialisation</th>
+<th class="text-end">Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+@foreach (var item in Model)
+{
+
+<tr onclick="window.location='/Patient/Details/@item.Pid'">
+
+<td>
+<span class="badge bg-secondary">@item.Pid</span>
+</td>
+
+<td class="fw-semibold">
+👤 @item.Fname @item.Lname
+</td>
+
+<td>
+
+@if(item.Gender=="Male")
+{
+<span class="badge bg-primary">♂ Male</span>
+}
+else
+{
+<span class="badge bg-danger">♀ Female</span>
+}
+
+</td>
+
+<td>
+🩺 @item.DoctorName
+</td>
+
+<td>
+<span class="badge bg-light text-dark">
+@item.Specialisation
+</span>
+</td>
+
+<td class="text-end">
+
+<a asp-action="Edit"
+   asp-route-id="@item.Pid"
+   class="btn btn-warning btn-sm action-btn"
+   onclick="event.stopPropagation();">
+Edit
+</a>
+
+<a asp-action="Details"
+   asp-route-id="@item.Pid"
+   class="btn btn-info btn-sm action-btn"
+   onclick="event.stopPropagation();">
+Details
+</a>
+
+<a asp-action="Delete"
+   asp-route-id="@item.Pid"
+   class="btn btn-danger btn-sm action-btn"
+   onclick="event.stopPropagation();">
+Delete
+</a>
+
+</td>
+
+</tr>
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+}
+
+<!-- PAGINATION -->
+@if(ViewBag.TotalPages > 1)
+{
+
+<nav class="mt-4">
+
+<ul class="pagination justify-content-center">
+
+@for(int i=1;i<=ViewBag.TotalPages;i++)
+{
+
+<li class="page-item @(i==ViewBag.Page ? "active":"")">
+
+<a class="page-link" href="?page=@i">
+
+@i
+
+</a>
+
+</li>
+
+}
+
+</ul>
+
+</nav>
+
+}
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- AJAX LIVE SEARCH -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+$("#searchInput").keyup(function(){
+
+let value=$(this).val();
+
+$.get("/Patient/Index?searchText="+value,function(data){
+
+let html=$(data).find("#patientTable").html();
+
+$("#patientTable").html(html);
+
+});
+
+});
+
+</script>

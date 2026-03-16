@@ -1,0 +1,94 @@
+@model HospitalDb.Models.Patient
+
+@{
+    ViewData["Title"] = "Add Patient";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <i class="bi bi-person-plus-fill"></i> Add New Patient
+            </h3>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create">
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+
+                    <!-- First Name -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Fname" class="form-label fw-bold"></label>
+                        <input asp-for="Fname" class="form-control" placeholder="Enter First Name" />
+                        <span asp-validation-for="Fname" class="text-danger"></span>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Lname" class="form-label fw-bold"></label>
+                        <input asp-for="Lname" class="form-control" placeholder="Enter Last Name" />
+                        <span asp-validation-for="Lname" class="text-danger"></span>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Gender" class="form-label fw-bold"></label>
+
+                        <select asp-for="Gender" class="form-select">
+                            <option value="">-- Select Gender --</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+
+                    <!-- Doctor Dropdown -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Did" class="form-label fw-bold">Assign Doctor</label>
+
+                        <select asp-for="Did" class="form-select">
+
+                            <option value="">-- Select Doctor --</option>
+
+                            @foreach (var d in ViewBag.Doctors)
+                            {
+                                <option value="@d.Did">@d.Name - @d.Specialisation</option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-4">
+
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle"></i> Create Patient
+                    </button>
+
+                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
