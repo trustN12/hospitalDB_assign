@@ -135,6 +135,9 @@ public class DataAccessLayer
             p.Fname = dr["Fname"].ToString();
             p.Lname = dr["Lname"].ToString();
             p.Gender = dr["Gender"].ToString();
+
+            p.Did = Convert.ToInt32(dr["Did"]);   // 🔥🔥🔥 THIS LINE FIXES EVERYTHING
+
             p.DoctorName = dr["DoctorName"].ToString();
             p.Specialisation = dr["Specialisation"].ToString();
         }

@@ -286,3 +286,4 @@
 /Users/algobot1210/Desktop/EjobIndia-Dot-Net-Core/HospitalDb/HospitalDb/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.Scripting.resources.dll
 /Users/algobot1210/Desktop/EjobIndia-Dot-Net-Core/HospitalDb/HospitalDb/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.Scripting.resources.dll
 /Users/algobot1210/Desktop/EjobIndia-Dot-Net-Core/HospitalDb/HospitalDb/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Scripting.resources.dll
+/Users/algobot1210/Desktop/EjobIndia-Dot-Net-Core/HospitalDb/HospitalDb/obj/Debug/net8.0/HospitalDb.sourcelink.json

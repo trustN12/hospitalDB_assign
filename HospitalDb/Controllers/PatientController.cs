@@ -2,6 +2,7 @@
 using HospitalDb.DAL;
 using HospitalDb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HospitalDb.Controllers;
 
@@ -84,14 +85,27 @@ public class PatientController : Controller
     public IActionResult Edit(int id)
     {
         var patient = _dal.GetPatients().FirstOrDefault(x => x.Pid == id);
-        ViewBag.Doctors = _dal.GetDoctors();
+
+        var doctors = _dal.GetDoctors();
+
+        ViewBag.Did = new SelectList(doctors, "Did", "Name", patient.Did);
+
         return View(patient);
     }
 
     [HttpPost]
     public IActionResult Edit(Patient p)
     {
-        _dal.UpdatePatient(p);
+        if (ModelState.IsValid)
+        {
+            _dal.UpdatePatient(p);
+            return RedirectToAction("Index");
+        }
+
+        var doctors = _dal.GetDoctors();
+        ViewBag.Did = new SelectList(doctors, "Did", "Name", p.Did);
+
+        // return View(p);
         return RedirectToAction("Index");
     }
 

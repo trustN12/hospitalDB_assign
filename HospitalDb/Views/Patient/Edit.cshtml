@@ -21,7 +21,7 @@
 
         <div class="card-body">
 
-            <form asp-action="Edit">
+            <form asp-action="Edit" method="post">
 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
@@ -61,7 +61,7 @@
                     <div class="col-md-6 mb-3">
                         <label asp-for="Did" class="form-label fw-bold">Assign Doctor</label>
 
-                        <select asp-for="Did" class="form-select" asp-items="ViewBag.Did"></select>
+                        <select asp-for="Did" class="form-select" asp-items="@ViewBag.Did"></select>
 
                         <span asp-validation-for="Did" class="text-danger"></span>
                     </div>
